@@ -1,0 +1,106 @@
+#:kivy 1.8.0
+
+<homePage>:
+    FloatLayout:
+        id: layout
+        canvas:
+            Color:
+                rgb: (0, 0, 0)
+            Rectangle:
+                size: (app.width, app.height)
+        Image:
+            color: (1, 1, 1, 0.1)
+            source: "bgImg.gif"
+            size: (app.width, app.height)
+        Label:
+            color: (1, 1, 1, 1)
+            text: "            The Victim's Life is literally in your hand.\nTouch on the screen and move it to slow down the blade."
+            center_x: app.width/2
+            center_y: app.height/2
+        Button:
+            text: "Let's Play the Game!"
+            size: (app.width, 25)
+            on_release: if app.progress > 100: app.bladePos = app.victimPos = app.gameOverAlpha = app.winAlpha = 0
+            on_release: if app.progress > 100: root.remove_widget(layout)
+    FloatLayout:
+        opacity: 1-app.progress/100
+        canvas:
+            Color:
+                rgb: (0, 0, 0)
+            Rectangle:
+                size: (app.width, 25)
+        ProgressBar:
+            value: app.progress
+            size: (app.width, 25)
+
+<GameOverScreen>:
+    canvas:
+        Color:
+            rgba: (1, 0, 0, app.gameOverAlpha)
+        Rectangle:
+            size: self.size
+    Label:
+        font_size: 34
+        color: (1, 1, 1, app.gameOverAlpha)
+        center_x: root.width/2
+        center_y: root.height/2
+        text: "You like killing, \n  don't you?"
+
+<Congratulation>:
+    canvas:
+        Color:
+            rgba: (0, 1, 0, app.winAlpha)
+        Rectangle:
+            size: self.size
+    Label:
+        font_size: 34
+        color: (1, 1, 1, app.winAlpha)
+        center_x: root.width/2
+        center_y: root.height/2
+        text: "   Congratulation! \nTry your luck again"
+
+<Victim>:
+    Image:
+        source: "Body.gif"
+        size: (100, 50)
+        pos: (app.victimPos-50, -10)
+
+<Blade>:
+    Image:
+        source: "Blade_w.gif"
+        size: (100, 100)
+        pos: (2*app.width/5, app.height-app.bladePos)
+
+<gameWidget>:
+    blade: blade_wid
+    victim: victim_wid
+    on_touch_move: app.bladePos -= app.slowBlade
+    canvas:
+        Color:
+            rgb: 0, 0, 0
+        Rectangle:
+            size: root.size
+            pos: root.pos
+    Image:
+        color: (1, 1, 1, 0.1)
+        source: "bgImg.gif"
+        size: root.size
+    Blade:
+        id: blade_wid
+        pos: (2*app.width/5, app.height-app.bladePos)
+    Victim:
+        id: victim_wid
+        pos: (app.victimPos-50, -10)
+    GameOverScreen:
+        size: root.size
+    Congratulation:
+        size: root.size
+    Button:
+        text: "Restart!!"
+        size: (70, 30)
+        center_x: root.width-40
+        y: root.height - 35
+        on_release: app.bladePos = app.victimPos = app.gameOverAlpha = app.winAlpha = 0
+    homePage:
+        id: home
+        
