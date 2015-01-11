@@ -10,7 +10,7 @@
                 size: (app.width, app.height)
         Image:
             color: (1, 1, 1, 0.1)
-            source: "bgImg.gif"
+            source: "Images/bgImg.gif"
             size: (app.width, app.height)
         Label:
             color: (1, 1, 1, 1)
@@ -18,17 +18,13 @@
             center_x: app.width/2
             center_y: app.height/2
         Button:
-            text: "Let's Play the Game!"
-            size: (app.width, 25)
+            font_size: 28
+            background_color: 0.8, 0.3, 0.3, (app.progress/120)
+            text: app.progress_label
+            pos: (0, 22)
+            size: (app.width, 35)
             on_release: if app.progress > 100: app.bladePos = app.victimPos = app.gameOverAlpha = app.winAlpha = 0
             on_release: if app.progress > 100: root.remove_widget(layout)
-    FloatLayout:
-        opacity: 1-app.progress/100
-        canvas:
-            Color:
-                rgb: (0, 0, 0)
-            Rectangle:
-                size: (app.width, 25)
         ProgressBar:
             value: app.progress
             size: (app.width, 25)
@@ -61,19 +57,20 @@
 
 <Victim>:
     Image:
-        source: "Body.gif"
+        source: "Images/Body.gif"
         size: (100, 50)
         pos: (app.victimPos-50, -10)
 
 <Blade>:
     Image:
-        source: "Blade_w.gif"
+        source: "Images/Metal_Blade.gif"
         size: (100, 100)
         pos: (2*app.width/5, app.height-app.bladePos)
 
 <gameWidget>:
     blade: blade_wid
     victim: victim_wid
+    home: home_page
     on_touch_move: app.bladePos -= app.slowBlade
     canvas:
         Color:
@@ -102,5 +99,5 @@
         y: root.height - 35
         on_release: app.bladePos = app.victimPos = app.gameOverAlpha = app.winAlpha = 0
     homePage:
-        id: home
+        id: home_page
         

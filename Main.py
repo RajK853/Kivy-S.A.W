@@ -1,7 +1,8 @@
 #:kivy 1.8.0
 from kivy.app import App                # for main App loop
+#from kivy.core.audio import SoundLoader
 from kivy.clock import Clock            # for updating the app contents in given intervals
-from kivy.properties import NumericProperty, ObjectProperty # for making kivy Numbers and Objects
+from kivy.properties import NumericProperty, ObjectProperty, StringProperty # for making kivy Numbers and Objects
 from kivy.uix.widget import Widget      # for making a custom widget
 from kivy.config import Config          # for changing the Kivy's default settings
 from kivy.base import EventLoop         # to prevent "Fatal Python error: (pygame parachute) Segmentation Fault"
@@ -23,11 +24,13 @@ class gameWidget(Widget):           # Root Widget
 	if Config.getint("graphics", "resizable") == 1:
 		Config.set("graphics", "resizable", "0")
 	Config.write()
+	EventLoop.ensure_window()
 
 class SAWApp(App):      # main App
 	EventLoop.ensure_window()
-	slowBlade = NumericProperty(0)
+	slowBlade = NumericProperty(0)      # value to slow down the blade
 	progress = NumericProperty(0)       # value for progress bar
+	progress_label = StringProperty()   # string to display as the pprogress bar fills
 	bladePos = NumericProperty(0)       # blade position
 	victimPos = NumericProperty(0)        # victim position
 	gameOverAlpha = NumericProperty(0)  # alpha value for game over screen
@@ -37,12 +40,16 @@ class SAWApp(App):      # main App
 
 	def update(self, dt):               # update victimPos, bladePos and checks is victim is dead or alive
 		# set the slowBlade to random
-		self.slowBlade = randint(8, 28)/10
+		self.slowBlade = randint(8, 30)/10
 		# change progress bar value at different rate
-		if self.progress < 5:
-			self.progress += 0.1
-		elif self.progress < 100:
-			self.progress += 10
+		if self.progress < 100:
+			self.progress_label = "%s %%" % round(self.progress, 2)
+			if self.progress <= 10:
+				self.progress += 0.2
+			else:
+				self.progress += 10
+		else:
+			self.progress_label = "Let's Play the Game"
 		# change victim's position at different rate at different positions
 		if self.victimPos < 2*self.width/5:
 			self.victimPos += 0.5
